@@ -1,12 +1,10 @@
-const sendResponse = (isSuccessfull, message, data, error) => {
-   return (
-      {
-         isSuccessfull: isSuccessfull,
-         message: message ? message : null,
-         error: error ? error : null,
-         data: data,
-      }
-   )
-}
+const sendResponse = (isSuccessfull, message, data) => {
+   return {
+      isSuccessfull,
+      message: isSuccessfull ? message : "",
+      error: !isSuccessfull ? message : "",
+      data,
+   };
+};
 
 module.exports = sendResponse

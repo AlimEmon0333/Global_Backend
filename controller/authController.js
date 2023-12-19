@@ -6,26 +6,40 @@ const authController = {
 
     signup: async (req, res) => {
         try {
-            let { userName, password, contact } = req.body
-            let obj = { userName, password, contact }
+            let { firstName, lastName, email, password, contact, dateOfBirth, gender } = req.body
+            let obj = { firstName, lastName, email, password, contact, dateOfBirth, gender }
             let errorArray = []
-
-            if (!obj.userName) {
-                errorArray.push("Username is required")
+            if (!obj.firstName) {
+                errorArray.push("First name is required")
+            }
+            if (!obj.lastName) {
+                errorArray.push("Last name is required")
+            }
+            if (!obj.email) {
+                errorArray.push("Email address is required")
             }
             if (!obj.password) {
-                errorArray.push("password is required")
+                errorArray.push("Password is required")
+            }
+            if (!obj.contact) {
+                errorArray.push("Contact number is required")
+            }
+            if (!obj.dateOfBirth) {
+                errorArray.push("Date of birth is required")
+            }
+            if (!obj.gender) {
+                errorArray.push("gender is required")
             }
             if (errorArray.length > 0) {
                 res
-                    .status(400).send(sendResponse(false, null, "Validation error !", errorArray))
+                    .status(401).send(sendResponse(false, "Validation error found !", errorArray))
                 return
             }
-            let userExist = await userModel.findOne({ userName: obj.userName })
+            let userExist = await userModel.findOne({ email: obj.email })
             if (userExist) {
                 res
-                    .status(400)
-                    .send(sendResponse(false, null, null, "User is already exist with this userName"))
+                    .status(403)
+                    .send(sendResponse(false, "User is already exist with this email", null))
                 return
             }
             obj.password = await bcrypt.hash(obj.password, 10)
@@ -34,44 +48,44 @@ const authController = {
             if (result) {
                 res
                     .status(200)
-                    .send(sendResponse(true, "User created !", result))
+                    .send(sendResponse(true, "User created successfully!", result))
                 return
             }
         } catch (error) {
-            res.status(500).send(sendResponse(false, null, error, "Internal server error"))
+            res.status(500).send(sendResponse(false, "Internal server error found !", error))
         }
     },
     login: async (req, res) => {
         try {
-            let { userName, password } = req.body
-            let obj = { userName, password }
-            let existingUser = await userModel.findOne({ userName: obj.userName })
+            let { email, password } = req.body
+            let obj = { email, password }
+            let existingUser = await userModel.findOne({ email: obj.email })
             if (existingUser) {
-                let correctPassword = await bcrypt.compare(obj.password, existingUser.password)
-                if (correctPassword) {
+                const validPass = await bcrypt.compare(obj.password, existingUser.password)
+                if (validPass) {
                     let token = jwt.sign({ ...existingUser }, process.env.SECRET_KEY)
-                    let respon = res.send(sendResponse(true, "User login successfully", { token: token, user: existingUser }, null))
+                    res.status(200).send(sendResponse(true, "User login successfully", { token: token, user: existingUser }, null))
                 } else {
-                    res.send(sendResponse(true, "Password not matched", null, null))
+                    res.status(401).send(sendResponse(false, "Password is not crrect , please enter valid password", null))
                 }
             } else {
-                res.send(sendResponse(false, "User is not exist"))
+                res.status(400).send(sendResponse(false, "User is not exist with this email address", null))
             }
 
         } catch (error) {
-            res.send(sendResponse(false, "Internal server error", null, error))
+            res.status(500).send(sendResponse(false, "Internal server error", error))
         }
-    },
-    checkAuth: async (req, res) => {
-        let token = req.headers.authorization.replace("Bearer ", "");
-        jwt.verify(token, process.env.SECRET_KEY, (err, decode) => {
-            if (err) {
-                res.status(401).send(sendResponse(false, "Un Authorized"));
-            } else {
-                res.status(200).send(sendResponse(true, "", decode._doc));
-            }
-        });
-    },
+    }
+    // checkAuth: async (req, res) => {
+    //     let token = req.headers.authorization.replace("Bearer ", "");
+    //     jwt.verify(token, process.env.SECRET_KEY, (err, decode) => {
+    //         if (err) {
+    //             res.status(401).send(sendResponse(false, "Un Authorized"));
+    //         } else {
+    //             res.status(200).send(sendResponse(true, "", decode._doc));
+    //         }
+    //     });
+    // },
 }
 
 module.exports = authController

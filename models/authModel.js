@@ -1,9 +1,17 @@
 const mongoose = require("mongoose")
 
 const userSchema = mongoose.Schema({
-    userName: {
+    firstName: {
         type: String,
-        required: [true, "User name is required"],
+        required: [true, "first name is required"],
+    },
+    lastName: {
+        type: String,
+        required: [true, "last name is required"],
+    },
+    email: {
+        type: String,
+        required: [true, "Email is required"],
     },
     password: {
         type: String,
@@ -11,7 +19,15 @@ const userSchema = mongoose.Schema({
     },
     contact: {
         type: Number,
-        required: [false, "Contact number is optional"],
+        required: [true, "Contact number is optional"],
+    },
+    dateOfBirth: {
+        type: Date,
+        required: [true, "Date of birth is required is optional"],
+    },
+    gender: {
+        type: String,
+        required: [true, "gender is required is optional"],
     },
 },
     {
