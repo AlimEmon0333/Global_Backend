@@ -85,17 +85,16 @@ const authController = {
         } catch (error) {
             res.status(500).send(sendResponse(false, "Internal server error", error))
         }
+    },
+    getUsers: async (req, res) => {
+        try {
+            const allUsers = await userModel.find()
+            res.status(200).send(sendResponse(true, 'all Users', allUsers))
+        }
+        catch (error) {
+            res.status(404).send(sendResponse(true, 'You are No Rights for this Action', error))
+        }
     }
-    // checkAuth: async (req, res) => {
-    //     let token = req.headers.authorization.replace("Bearer ", "");
-    //     jwt.verify(token, process.env.SECRET_KEY, (err, decode) => {
-    //         if (err) {
-    //             res.status(401).send(sendResponse(false, "Un Authorized"));
-    //         } else {
-    //             res.status(200).send(sendResponse(true, "", decode._doc));
-    //         }
-    //     });
-    // },
 }
 
 module.exports = authController
