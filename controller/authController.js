@@ -66,22 +66,23 @@ const authController = {
             if (!obj.password) {
                 errorArray.push("Password is required")
             }
-            if(errorArray.length > 0 ){
-                res.status(401).send(sendResponse(false , "Credentials not found" , errorArray))
+            if (errorArray.length > 0) {
+                res.status(401).send(sendResponse(false, "Credentials not found", errorArray))
             }
-            let existingUser = await userModel.findOne({ email: obj.email })
-            if (existingUser) {
-                const validPass = await bcrypt.compare(obj.password, existingUser.password)
-                if (validPass) {
-                    let token = jwt.sign({ ...existingUser }, process.env.SECRET_KEY)
-                    res.status(200).send(sendResponse(true, "User login successfully", { token: token, user: existingUser }, null))
+            else {
+                let existingUser = await userModel.findOne({ email: obj.email })
+                if (existingUser) {
+                    const validPass = await bcrypt.compare(obj.password, existingUser.password)
+                    if (validPass) {
+                        let token = jwt.sign({ ...existingUser }, process.env.SECRET_KEY)
+                        res.status(200).send(sendResponse(true, "User login successfully", { token: token, user: existingUser }, null))
+                    } else {
+                        res.status(401).send(sendResponse(false, "Password is not crrect , please enter valid password", null))
+                    }
                 } else {
-                    res.status(401).send(sendResponse(false, "Password is not crrect , please enter valid password", null))
+                    res.status(400).send(sendResponse(false, "User is not exist with this email address", null))
                 }
-            } else {
-                res.status(400).send(sendResponse(false, "User is not exist with this email address", null))
             }
-
         } catch (error) {
             res.status(500).send(sendResponse(false, "Internal server error", error))
         }
