@@ -9,6 +9,8 @@ const projectsRoute = require("./router/projectRoute")
 App.use("/auth" , authRoute)
 App.use("/projects" , projectsRoute)
 
+App.get("/" , (res) => {res.setEncoding("Server started")})
+
 // server
 mongoose
     .connect(process.env.MONGO_URI)
