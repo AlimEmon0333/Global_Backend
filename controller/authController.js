@@ -66,6 +66,9 @@ const authController = {
             if (!obj.password) {
                 errorArray.push("Password is required")
             }
+            if(errorArray.length > 0 ){
+                res.status(401).send(sendResponse(false , "Credentials not found" , errorArray))
+            }
             let existingUser = await userModel.findOne({ email: obj.email })
             if (existingUser) {
                 const validPass = await bcrypt.compare(obj.password, existingUser.password)
