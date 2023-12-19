@@ -94,7 +94,23 @@ const authController = {
         catch (error) {
             res.status(404).send(sendResponse(true, 'You are No Rights for this Action', error))
         }
-    }
+    },
+    markAsTeamMember: async (req, res) => {
+        try {
+            let userId = req.params.id
+            const user = await userModel.findByIdAndUpdate(
+                userId,
+                { userStatus: 'TeamMember' },
+                { new: true }
+            );
+            if (!user) {
+                return res.status(404).json({ message: 'Project not found' });
+            }
+            return res.json(user);
+        } catch (error) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    },
 }
 
 module.exports = authController

@@ -25,9 +25,10 @@ const userSchema = mongoose.Schema({
         type: Date,
         required: [true, "Date of birth is required is optional"],
     },
-    gender: {
+    userStatus: {
         type: String,
-        required: [true, "gender is required is optional"],
+        enum: ['TeamMember', 'User'],
+        default: 'User'
     },
 },
     {
