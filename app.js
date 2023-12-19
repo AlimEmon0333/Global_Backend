@@ -3,11 +3,13 @@ const mongoose = require("mongoose")
 const App = express()
 App.use(express.json())
 require('dotenv').config();
+const teamRoute = require("./router/teamRoute")
 // Work
 const authRoute = require("./router/authRouter")
 const projectsRoute = require("./router/projectRoute")
 App.use("/auth", authRoute)
 App.use("/projects", projectsRoute)
+App.use("/teams", teamRoute)
 
 App.get("/", (req, res) => {
     res.send("Server Started");
