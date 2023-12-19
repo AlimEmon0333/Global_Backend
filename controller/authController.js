@@ -74,8 +74,7 @@ const authController = {
                 if (existingUser) {
                     const validPass = await bcrypt.compare(obj.password, existingUser.password)
                     if (validPass) {
-                        let token = jwt.sign({ ...existingUser }, process.env.SECRET_KEY)
-                        res.status(200).send(sendResponse(true, "User login successfully", { token: token, user: existingUser }, null))
+                        res.status(200).send(sendResponse(true, "User login successfully", existingUser))
                     } else {
                         res.status(401).send(sendResponse(false, "Password is not crrect , please enter valid password", null))
                     }
