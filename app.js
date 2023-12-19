@@ -6,10 +6,12 @@ require('dotenv').config();
 // Work
 const authRoute = require("./router/authRouter")
 const projectsRoute = require("./router/projectRoute")
-App.use("/auth" , authRoute)
-App.use("/projects" , projectsRoute)
+App.use("/auth", authRoute)
+App.use("/projects", projectsRoute)
 
-App.get("/" , (res) => {res.send("Server started")})
+App.get("/", (req, res) => {
+    res.send("Server Started");
+});
 
 // server
 mongoose
