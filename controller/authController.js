@@ -59,6 +59,13 @@ const authController = {
         try {
             let { email, password } = req.body
             let obj = { email, password }
+            let errorArray = []
+            if (!obj.email) {
+                errorArray.push("Email address is required")
+            }
+            if (!obj.password) {
+                errorArray.push("Password is required")
+            }
             let existingUser = await userModel.findOne({ email: obj.email })
             if (existingUser) {
                 const validPass = await bcrypt.compare(obj.password, existingUser.password)
