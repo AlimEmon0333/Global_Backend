@@ -46,6 +46,22 @@ const TeamController = {
             res.status(404).send(sendResponse(true, '0 teams register yet', error))
         }
     },
+    getTeamMembers : async (req, res) => {
+        try {
+            const teamId = req.params.teamId;
+            const team = await Team.findById(teamId);
+
+            if (!team) {
+                return res.status(404).json({ message: 'Team not found' });
+            }
+
+            const members = team.members; // Assuming members is an array in your Team model
+            res.status(200).json({ data: members });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    }
 };
 
 module.exports = TeamController;
