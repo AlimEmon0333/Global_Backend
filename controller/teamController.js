@@ -1,6 +1,8 @@
 // teamController.js
 const userModel = require('../models/authModel');
 const Team = require('../models/teamModel');
+const sendResponse = require("../helper/helper");
+
 
 const TeamController = {
     createTeam: async (req, res) => {
@@ -33,6 +35,15 @@ const TeamController = {
                 message: 'Team creation failed',
                 error: error.message,
             });
+        }
+    },
+    getTeams: async (req, res) => {
+        try {
+            const allTeams = await Team.find()
+            res.status(200).send(sendResponse(true, 'all Teams', allTeams))
+        }
+        catch (error) {
+            res.status(404).send(sendResponse(true, '0 teams register yet', error))
         }
     },
 };
