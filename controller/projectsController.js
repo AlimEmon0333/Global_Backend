@@ -4,10 +4,8 @@ const projectsModel = require("../models/projectsModel")
 const projectsController = {
     get: async (req, res) => {
         try {
-            // let { pageNo, pageSize } = req.query;
-            // console.log(pageNo, pageSize)
-            // let skipCount = (pageNo - 1) * pageSize;
-            // .limit(pageSize).skip(skipCount)
+            let { pageNo, pageSize } = req.query;
+            let skipCount = (pageNo - 1) * pageSize.limit(pageSize).skip(skipCount)
             let result = await projectsModel.find();
             res.status(200).send(sendResponse(true, "data sended", result))
         } catch (error) {
@@ -82,8 +80,8 @@ const projectsController = {
     edit: async (req, res) => {
         try {
             const id = req.params.id
-            const { title, description, dueDate,} = req.body
-            const obj = { title, description, dueDate}
+            const { title, description, dueDate, } = req.body
+            const obj = { title, description, dueDate }
             const errArr = []
             if (!obj.title) {
                 errArr.push('Required title')
