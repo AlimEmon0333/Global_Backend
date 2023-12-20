@@ -5,11 +5,11 @@ const projectsController = {
     get: async (req, res) => {
         try {
             let { pageNo, pageSize } = req.query;
-            let skipCount = (pageNo - 1) * pageSize.limit(pageSize).skip(skipCount)
-            let result = await projectsModel.find();
-            res.status(200).send(sendResponse(true, "data sended", result))
-        } catch (error) {
-            res.send(error);
+            let skipCount = (pageNo - 1) * pageSize;
+            let result = await projectsModel.find().limit(pageSize).skip(skipCount);
+            res.status(200).send(sendResponse(true, "", result));
+        } catch (e) {
+            res.status(500).send(sendResponse(false, "Internal Server Error", e));
         }
     },
     getbyid: async (req, res) => {
